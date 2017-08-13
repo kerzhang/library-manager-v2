@@ -34,4 +34,12 @@ Object.keys(db).forEach(function(modelName) {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+// //Import all models into db.
+// db.book = require('../models/book.js')(sequelize, Sequelize);
+// db.loan = require('../models/loan.js')(sequelize, Sequelize);
+// db.patron = require('../models/patron.js')(sequelize, Sequelize);
+
+//Models relationships
+
+
 module.exports = db;

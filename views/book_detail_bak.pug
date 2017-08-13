@@ -30,14 +30,14 @@ block content
           th Returned on
           th Action
       tbody
-        each loan in loans
+        each loan in book.bookLoans
           tr
             td
-              a(href='/books/' + book.id)= book.title
+              a(href='/books/' + loan.loanBook)= book.bookTitle
             td
-              a(href='/patrons/' + loan.Patron.id)= loan.Patron.first_name +' '+ loan.Patron.last_name
-            td= loan.loaned_on
-            td= loan.return_by
-            td= loan.return_on
+              a(href='/patrons/' + loan.loanPatronId)= loan.loanPatron
+            td= loan.loanOn
+            td= loan.loanReturnBy
+            td= loan.loanReturnOn
             td
               a.button(href='return_book.html') Return Book

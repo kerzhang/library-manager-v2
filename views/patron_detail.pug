@@ -2,26 +2,27 @@ extends layout.pug
 
 block content
   body
-    h1 Patron: Andrew Chalkley
-    form
+    h1 Patron: #{patron.first_name + ' ' + patron.last_name}
+    form(action="/patrons/" + patron.id, method='post')
+      p(name='id', value='patron.id', style='display:none')
       p
         label(for='first_name') First Name
-        input#first_name(type='text', value='Andrew')
+        input#first_name(name='first_name', type='text', value= patron.first_name)
       p
         label(for='last_name') Last Name
-        input#last_name(type='text', value='Chalkley')
+        input#last_name(name='last_name', type='text', value= patron.last_name)
       p
         label(for='address')  Address
-        input#address(type='text', value='1234 NE 20st St')
+        input#address(name='address', type='text', value= patron.address)
       p
         label(for='email') Email
-        input#email(type='text', value='andrew.chalkley@teamtreehouse.com')
+        input#email(name='email', type='text', value= patron.email)
       p
         label(for='library_id') Library ID
-        input#library_id(type='text', value='MCL1001')
+        input#library_id(name='library_id', type='text', value= patron.library_id)
       p
         label(for='zip_code') Zip Code
-        input#zip_code(type='text', value='90210')
+        input#zip_code(name='zip_code', type='text', value= patron.zip_code)
       p
         input(type='submit', value='Update')
     h2 Loan History
@@ -35,23 +36,14 @@ block content
           th Returned on
           th Action
       tbody
-        tr
-          td
-            a(href='book_detail.html') Harry Potter and the Goblet of Fire
-          td
-            a(href='patron_detail.html') Andrew Chalkley
-          td 2015-12-11
-          td 2015-12-18
-          td
-          td
-            a.button(href='return_book.html') Return Book
-        tr
-          td
-            a(href='book_detail.html') A Brief History of Time
-          td
-            a(href='patron_detail.html') Andrew Chalkley
-          td 2015-12-12
-          td 2015-12-19
-          td
-          td
-            a.button(href='return_book.html') Return Book
+        each loan in loans
+          tr
+            td
+              a(href='/books/' + loan.book_id)= loan.Book.title
+            td
+              a(href='/patrons/' + patron_id)= patron.first_name + ' ' + patron.last_name
+            td= loan.loaned_on
+            td= loan.return_by
+            td= loan.return_on
+            td
+              a.button(href='return_book.html') Return Book

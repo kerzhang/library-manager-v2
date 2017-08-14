@@ -43,7 +43,7 @@ router.post('/:id', function(req, res, next) {
       }
     })
     .then(function(patron) {
-      res.redirect('/patrons/' + patron.id);
+      res.redirect('/patrons');
     })
     .catch(function(error) {
       // TODO: DATA VALIDATION AND ERROR HANDLE

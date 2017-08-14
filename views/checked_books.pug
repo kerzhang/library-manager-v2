@@ -2,7 +2,7 @@ extends layout.pug
 
 block content
   body
-    h1 Books
+    h1 Checked Out Books
     p
       a.button(href='/books/new') Create New Book
     p
@@ -27,5 +27,3 @@ block content
             td= book.author
             td= book.genre
             td= book.first_published
-
-

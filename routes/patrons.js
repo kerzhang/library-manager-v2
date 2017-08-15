@@ -26,8 +26,20 @@ router.get('/new', function(req, res, next) {
 //Save new book
 router.post('/', function(req, res, next) {
   console.log(req.body);
-  db.Patron.create(req.body).then(function(book) {
+  db.Patron.create(req.body).then(function() {
     res.redirect('/patrons');
+  }).catch(function(err) {
+    if(err.name === 'SequelizeValidationError') {
+      res.render('new_patron', {
+        patron: db.Patron.build(req.body),
+        errors: err.errors
+      })
+    } else {
+      throw err;
+    }
+  }).catch(function(err) {
+    console.log("Error: " + err);
+    res.status(500).send(err);
   });
 });
 

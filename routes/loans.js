@@ -19,7 +19,7 @@ router.get('/', function(req, res) {
             }
           ],
           where: {
-            return_by: { 
+            return_by : { 
               $lt: today 
             }
           }
@@ -96,13 +96,15 @@ router.get('/new', function(req, res, next) {
         allPatrons = patrons;
       })
       .then(function() {
-        var today = new Date().toISOString().substring(0,10);    
-        //TODO: CREATE RETURN_BY DATE BY +7 DAYS    
+        var loanDate = new Date().toISOString();
+        var today = new Date();
+        var returnDate = (new Date(today.setDate(today.getDate() + 7))).toISOString();
         res.render('new_loan', {
           patron: db.Loan.build(),
           books: allBooks,
           patrons: allPatrons,
-          createDate: today,
+          loanDate: loanDate,
+          returnDate: returnDate,
           pageTitle: 'New Loan'
         });
       });
@@ -111,10 +113,21 @@ router.get('/new', function(req, res, next) {
 
 //Save new book
 router.post('/', function(req, res, next) {
-  //TODO: validate the date format.
-  console.log(req.body);
+  // console.log(req.body);
   db.Loan.create(req.body).then(function() {
     res.redirect('/loans');
+  }).catch(function(err) {
+    if(err.name === 'SequelizeValidationError') {
+      res.render('error', {
+        errors: err.errors,
+        path: '/loans/'
+      })
+    } else {
+      throw err;
+    }
+  }).catch(function(err) {
+    console.log("Error: " + err);
+    res.status(500).send(err);
   });
 });
 

@@ -66,12 +66,20 @@ router.get('/', function(req, res) {
 
 //Save new book
 router.post('/', function(req, res, next) {
-  console.log(req.body);
   db.Book.create(req.body).then(function() {
     res.redirect('/books');
-  }).catch(function(error) {
-    console.log("Error: " + error);
-    res.status(500).send(error);
+  }).catch(function(err) {
+    if(err.name === 'SequelizeValidationError') {
+      res.render('new_book', {
+        book: db.Book.build(req.body),
+        errors: err.errors
+      })
+    } else {
+      throw err;
+    }
+  }).catch(function(err) {
+    console.log("Error: " + err);
+    res.status(500).send(err);
   });
 });
 
@@ -83,8 +91,8 @@ router.get('/new', function(req, res, next) {
 
 
 //Return book
-router.get('/return_book/:id', function(req, res, next) {
-  console.log('got the book' + id);
+router.get('/:id/return', function(req, res, next) {
+  console.log('got the book ' + req.params.id);
   db.Book
     .findById(req.params.id)
     .then(function(book) {
@@ -101,9 +109,8 @@ router.post('/:id', function(req, res, next) {
   db.Book
     .findById(req.params.id)
     .then(function(book) {
-      console.log('Book --------------->' + book.id);
       if (book) {
-        console.log(req.body);
+        // console.log(req.body);
         return book.update(req.body);
       } else {
         res.send(404);
@@ -111,11 +118,18 @@ router.post('/:id', function(req, res, next) {
     })
     .then(function(book) {
       res.redirect('/books');
-    })
-    .catch(function(error) {
-      // TODO: DATA VALIDATION AND ERROR HANDLE
-      console.log(error);
-      res.status(500).send(error);
+    }).catch(function(err) {
+      if(err.name === 'SequelizeValidationError') {
+        res.render('error', {
+          errors: err.errors,
+          path: '/books/'
+        })
+      } else {
+        throw err;
+      }
+    }).catch(function(err) {
+      console.log("Error: " + err);
+      res.status(500).send(err);
     });
 });
 
@@ -125,9 +139,6 @@ router.get('/:id', function(req, res) {
     db.Loan
       .findAll({
         include: [
-          // {
-          //   model: db.Book
-          // },
           {
             model: db.Patron
           }

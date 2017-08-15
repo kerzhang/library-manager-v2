@@ -3,6 +3,11 @@ extends layout.pug
 block content
   body
     h1 Book: #{book.title}
+    if errors
+      h2.error Oooops!
+      ul.error
+        each error in errors
+          li.error= error.message
     form(action='/books/' + book.id, method="post")
       p(name='id', value='book.id', style='display:none')
       p
@@ -40,4 +45,4 @@ block content
             td= loan.return_by
             td= loan.return_on
             td
-              a.button(href='/books/return_book/' + loan.book_id) Return Book
+              a.button(href='/books/' + loan.book_id + '/return_book') Return Book

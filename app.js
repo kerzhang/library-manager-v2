@@ -29,13 +29,6 @@ app.use('/books', booksRoutes);
 app.use('/loans', loansRoutes);
 app.use('/patrons', patronsRoutes);
 
-// app.use('/books', books);
-// app.get("/", function(req, res) {
-//   res.render("home", {
-//     pageTitle: 'Home'
-//   });
-// });
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -50,8 +43,12 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
+  console.log('Error at the end'+err);
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error', {
+    message: err.message,
+    error: err
+  });
 });
 
 module.exports = app;

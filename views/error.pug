@@ -4,20 +4,12 @@ block content
   body
     h1 New Book
     form
-      h2.error Oooops!
+    if errors
+      h4.error Oooops! Errors returned!
       ul.error
-        li Author is required
-      p
-        label(for='title') Title
-        input#title(type='text')
-      p
-        label(for='author') Author
-        input#author(type='text')
-      p
-        label(for='genre') Genre
-        input#genre(type='text')
-      p
-        label(for='first_published') First Published
-        input#first_published(type='text')
-      p
-        input(type='submit', value='Create New Book')
+      each error in errors
+        li= error.message
+    else
+      h5= error.message
+    br
+    a.button(href= path) Return

@@ -3,24 +3,25 @@ extends layout.pug
 block content
   body
     h1 New Loan
+
     form(action='/loans/', method='post')
       p
         label(for='book_id') Book
         select#book_id(name='book_id')
           each book, index in books
-            option(value=index)= book.title
+            option(value= book.id)= book.title
 
       p
         label(for='patron_id') Patron
         select#patron_id(name='patron_id')
           each patron, index in patrons
-            option(value=index)= patron.first_name + ' ' + patron.lastName
+            option(value= patron.id)= patron.first_name + ' ' + patron.lastName
 
       p
         label(for='loaned_on') Loaned on:
-        input#loaned_on(type='text', name='loaned_on', value= createDate)
+        input#loaned_on(type='text', name='loaned_on', value= loanDate)
       p
         label(for='return_by') Return by:
-        input#return_by(type='text', name='return_by', value='')
+        input#return_by(type='text', name='return_by', value= returnDate)
       p
         input(type='submit', value='Create New Loan')

@@ -9,9 +9,9 @@ block content
       | Filters 
       a(href='/loans') All
       |  
-      a(href='overdue_loans.html') Overdue
+      a(href='/loans?filter=overdue') Overdue
       |  
-      a(href='checked_loans.html') Checked Out
+      a(href='/loans?filter=checked_out') Checked Out
     table
       thead
         tr
@@ -32,4 +32,9 @@ block content
             td= loan.return_by
             td= loan.returned_on
             td
-              a.button(href='/books/' + loan.book_id + '/return_book') Return Book
+              a.button(href='/books/' + loan.book_id + '/return') Return Book
+
+    br
+    .pagination
+      each page in totalPages
+        a(class={active: page===currentPage} href='/loans?page='+ page )= page

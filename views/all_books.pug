@@ -9,9 +9,13 @@ block content
       | Filters 
       a(href='/books') All
       |  
-      a(href='/books?filter=overdue') Overdue
+      a(href='/books/overdue') Overdue
       |  
-      a(href='/books?filter=checked_out') Checked Out
+      a(href='/books/checked_out') Checked Out
+      .input_group
+        input#search.form-control(type='search' placeholder='Search for book...')
+        span.input-group-btn
+          button.btn.btn-primary(type='button', onclick='searchBook()') Search
     table
       thead
         tr
@@ -33,4 +37,4 @@ block content
         a(class={active: page===currentPage} href='/books?page='+ page )= page
 
 
-
+    script(src='../javascripts/main.js')

@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var db = require('../config/db.js');
 
-var PAGE_LIMIT = 6;
+var PAGE_LIMIT = 8;
 var paginations = [];
 
 function countTotalPagesAndBooks(allBooks) {
@@ -16,59 +16,100 @@ function countTotalPagesAndBooks(allBooks) {
   console.log(paginations);
 }
 
+router.get('/checked_out', function (req, res) {
+  var today = new Date().toISOString().substring(0, 10);
+  
+  db.Book
+  .findAll({
+    include: {
+      model: db.Loan,
+      where: {
+        returned_on: null
+      }
+    }
+  })
+  .then(function(books) {
+    // console.log(books);
+    res.render('checked_books', {
+      books: books,
+      pageTitle: 'Books Not Returned'
+    });
+  })
+  .catch(function(error) {
+    res.status(500).send(error);
+  });
+});
+
+router.get('/overdue', function (req, res) {
+  var today = new Date().toISOString().substring(0, 10);
+  
+  db.Book
+  .findAll({
+    include: {
+      model: db.Loan,
+      where: {
+        return_by: { $lt: today }
+      }
+    }
+  })
+  .then(function(books) {
+    // console.log(books);
+    res.render('overdue_books', {
+      books: books,
+      pageTitle: 'Overdue Books'
+    });
+  })
+  .catch(function(error) {
+    console.log(error);
+    res.status(500).send(error);
+  });
+});
+
 /* GET all books */
 router.get('/', function(req, res) {
-  var today = new Date().toISOString().substring(0, 10);
-
   db.Book
     .findAll()
     .then(function(books) {
       countTotalPagesAndBooks(books);
     })
     .then(function() {
-      if (req.query.filter === 'overdue') {
+      if (req.query.search !== undefined) {
         db.Book
-          .findAll({
-            include: {
-              model: db.Loan,
-              where: {
-                return_by: { $lt: today }
+        .findAll({
+          order: [['title', 'DESC']],
+          where: {
+            $or: [
+              {
+                title: {
+                  $like: '%' + req.query.search + '%'
+                }
+              },
+              {
+                author: {
+                  $like: '%' + req.query.search + '%'
+                }
+              },
+              {
+                genre: {
+                  $like: '%' + req.query.search + '%'
+                }
               }
-            }
-          })
-          .then(function(books) {
-            console.log(books);
-            res.render('overdue_books', {
-              books: books,
-              pageTitle: 'Overdue Books'
-            });
-          })
-          .catch(function(error) {
-            console.log(error);
-            res.status(500).send(error);
+            ]
+          }
+        })
+        .then(function(books) {
+          countTotalPagesAndBooks(books);
+          res.render('all_books', { 
+            books: books, 
+            pageTitle: 'Book List',
+            currentPage: 1,
+            totalPages: []            
           });
-        // } else {
-        //   res.sendStatus(404);
-      } else if (req.query.filter === 'checked_out') {
-        db.Book
-          .findAll({
-            include: {
-              model: db.Loan,
-              where: {
-                returned_on: null
-              }
-            }
-          })
-          .then(function(books) {
-            console.log(books);
-            res.render('checked_books', {
-              books: books,
-              pageTitle: 'Books Not Returned'
-            });
-          })
-          .catch(function(error) {
-            res.status(500).send(error);
-          });
+        })
+        .catch(function (error) {
+           // console.log(error);
+           res.status(500).send(error);
+        })
       } else if (req.query.page !== undefined) {
         let clickedPage = 1;
         if (req.query.page <= paginations.length && req.query.page > 0) {
@@ -151,52 +192,9 @@ router.get('/new', function(req, res, next) {
   res.render('new_book', { book: db.Book.build(), pageTitle: 'New Book' });
 });
 
-//Return book
-router.get('/:id/return', function(req, res, next) {
-  console.log('Return the book: ' + req.params.id);
-  db.Book
-    .findById(req.params.id)
-    .then(function(book) {
-      res.render('return_book', { book: book, pageTitle: 'Return Book' });
-    })
-    .catch(function(error) {
-      console.log('there is error: ' + error);
-      res.status(500).send(error);
-    });
-});
-
 //Update book information
-router.post('/:id', function(req, res, next) {
-  db.Book
-    .findById(req.params.id)
-    .then(function(book) {
-      if (book) {
-        // console.log(req.body);
-        return book.update(req.body);
-      } else {
-        res.send(404);
-      }
-    })
-    .then(function(book) {
-      res.redirect('/books');
-    })
-    .catch(function(err) {
-      if (err.name === 'SequelizeValidationError') {
-        res.render('error', {
-          errors: err.errors,
-          path: '/books/'
-        });
-      } else {
-        throw err;
-      }
-    })
-    .catch(function(err) {
-      console.log('Error: ' + err);
-      res.status(500).send(err);
-    });
-});
-
-router.get('/:id/', function(req, res) {
+router.route('/:id')
+.get(function(req, res) {
   db.Book.findById(req.params.id).then(function(book) {
     db.Loan
       .findAll({
@@ -226,6 +224,36 @@ router.get('/:id/', function(req, res) {
         res.sendStatus(500);
       });
   });
+})
+.post(function(req, res, next) {
+  db.Book
+    .findById(req.params.id)
+    .then(function(book) {
+      if (book) {
+        // console.log(req.body);
+        return book.update(req.body);
+      } else {
+      //TODO: create new Error object
+      res.send(404);
+      }
+    })
+    .then(function(book) {
+      res.redirect('/books');
+    })
+    .catch(function(err) {
+      if (err.name === 'SequelizeValidationError') {
+        res.render('error', {
+          errors: err.errors,
+          path: '/books/'
+        });
+      } else {
+        throw err;
+      }
+    })
+    .catch(function(err) {
+      console.log('Error: ' + err);
+      res.status(500).send(err);
+    });
 });
 
 module.exports = router;

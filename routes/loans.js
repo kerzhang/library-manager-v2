@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var db = require('../config/db.js');
 
-var PAGE_LIMIT = 6;
+var PAGE_LIMIT = 8;
 var paginations = [];
 
 function countTotalPagesAndLoans(allLoans) {
@@ -15,6 +15,65 @@ function countTotalPagesAndLoans(allLoans) {
   console.log(paginations);
 }
 
+router.get('/overdue', function (req, res) {
+  var today = new Date().toISOString().substring(0, 10);
+    db.Loan
+      .findAll({
+        include: [
+          {
+            model: db.Book
+          },
+          {
+            model: db.Patron
+          }
+        ],
+        where: {
+          return_by: {
+            $lt: today
+          },
+          returned_on: null
+        }
+      })
+      .then(function(loans) {
+        res.render('overdue_loans', {
+          loans: loans,
+          pageTitle: 'Overdue Loans'
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+        res.status(500).send(error);
+      });
+});
+
+
+router.get('/checked_out', function (req, res) {
+  var today = new Date().toISOString().substring(0, 10);
+  db.Loan
+  .findAll({
+    include: [
+      {
+        model: db.Book
+      },
+      {
+        model: db.Patron
+      }
+    ],
+    where: {
+      returned_on: null
+    }
+  })
+  .then(function(loans) {
+    res.render('checked_loans', {
+      loans: loans,
+      pageTitle: 'Loans Checked Out'
+    });
+  })
+  .catch(function(error) {
+    res.status(500).send(error);
+  });
+});
+
 /* GET all loans record */
 router.get('/', function(req, res) {
   var today = new Date().toISOString().substring(0, 10);
@@ -25,58 +84,7 @@ router.get('/', function(req, res) {
       countTotalPagesAndLoans(loans);
     })
     .then(function() {
-      if (req.query.filter === 'overdue') {
-        db.Loan
-          .findAll({
-            include: [
-              {
-                model: db.Book
-              },
-              {
-                model: db.Patron
-              }
-            ],
-            where: {
-              return_by: {
-                $lt: today
-              }
-            }
-          })
-          .then(function(loans) {
-            res.render('overdue_loans', {
-              loans: loans,
-              pageTitle: 'Overdue Loans'
-            });
-          })
-          .catch(function(error) {
-            console.log(error);
-            res.status(500).send(error);
-          });
-      } else if (req.query.filter === 'checked_out') {
-        db.Loan
-          .findAll({
-            include: [
-              {
-                model: db.Book
-              },
-              {
-                model: db.Patron
-              }
-            ],
-            where: {
-              returned_on: null
-            }
-          })
-          .then(function(loans) {
-            res.render('checked_loans', {
-              loans: loans,
-              pageTitle: 'Loans Checked Out'
-            });
-          })
-          .catch(function(error) {
-            res.status(500).send(error);
-          });
-      } else if (req.query.page !== undefined) {
+      if (req.query.page !== undefined) {
         let clickedPage = 1;
         if (req.query.page <= paginations.length && req.query.page > 0) {
           console.log('current page is: ' + req.query.page);
@@ -146,14 +154,16 @@ router.get('/', function(req, res) {
     });
 });
 
-//Add new book
+//Add new loan
 router.get('/new', function(req, res, next) {
   let allBooks = [];
   let allPatrons = [];
   db.Book.findAll().then(function(books) {
     allBooks = books;
     db.Patron
-      .findAll()
+      .findAll({
+        //TODO: Books that already loaned should be filtered
+      })
       .then(function(patrons) {
         allPatrons = patrons;
       })
@@ -175,7 +185,7 @@ router.get('/new', function(req, res, next) {
   });
 });
 
-//Save new book
+//Save new loan
 router.post('/', function(req, res, next) {
   // console.log(req.body);
   db.Loan
@@ -199,4 +209,60 @@ router.post('/', function(req, res, next) {
     });
 });
 
+//Return book
+router.route('/:id')
+.get(function(req, res, next) {
+  console.log('Return the book: ' + req.params.id);
+  var today = new Date().toISOString().substring(0, 10);
+  
+  db.Loan
+    .findById(req.params.id, {
+      include: [
+        {
+          model: db.Book
+        },
+        {
+          model: db.Patron
+        }
+      ]
+    })
+    .then(function(loan) {
+      res.render('return_book', { loan: loan, pageTitle: 'Return Book', returnDay: today });
+    })
+    .catch(function(error) {
+      console.log('there is error: ' + error);
+      res.status(500).send(error);
+    });
+})
+.post(function(req, res, next) {
+  db.Loan
+  .findById(req.params.id)
+  .then(function (loan) {
+    console.log(loan);
+    if(loan) {
+      return loan.update(req.body);
+    } else {
+      //TODO: create new Error object
+      console.log("======" + req.params.id);
+      res.sendStatus(404);
+    }
+  })
+  .then(function() {
+    res.redirect('/loans');
+  })
+  .catch(function(err) {
+    if (err.name === 'SequelizeValidationError') {
+      res.render('error', {
+        errors: err.errors,
+        path: '/loans/'
+      });
+    } else {
+      throw err;
+    }
+  })
+  .catch(function(err) {
+    console.log('Error: ' + err);
+    res.status(500).send(err);
+  });
+})  
 module.exports = router;

@@ -2,14 +2,14 @@ extends layout.pug
 
 block content
   body
-    h1 New Book
+    h2 New Book
     form
     if errors
-      h4.error Oooops! Errors returned!
+      h4.error.danger Oooops! Errors returned!
       ul.error
       each error in errors
-        li= error.message
+        li.danger= error.message
     else
       h5= error.message
     br
-    a.button(href= path) Return
+    a.btn.btn-warning(href= path) Return

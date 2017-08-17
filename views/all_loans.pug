@@ -2,18 +2,18 @@ extends layout.pug
 
 block content
   body
-    h1 Loans
-    p
-      a.button(href='/loans/new') Create New Loan
+    h2 Loans
+    p.float-right
+      a.btn.btn-success.btn-sm(href='/loans/new') Create New Loan
     p
       | Filters 
-      a(href='/loans') All
+      a.btn.btn-outline-success.btn-sm(href='/loans') All
       |  
-      a(href='/loans/overdue') Overdue
+      a.btn.btn-outline-success.btn-sm(href='/loans/overdue') Overdue
       |  
-      a(href='/loans/checked_out') Checked Out
-    table
-      thead
+      a.btn.btn-outline-success.btn-sm(href='/loans/checked_out') Checked Out
+    table.table.table-striped.table-bordered.table-hover.table-sm
+      thead.thead-inverse
         tr
           th Book
           th Patron 
@@ -37,4 +37,4 @@ block content
     br
     .pagination
       each page in totalPages
-        a(class={active: page===currentPage} href='/loans?page='+ page )= page
+        a.page-item.page-link(class={active: page===currentPage} href='/loans?page='+ page )= page

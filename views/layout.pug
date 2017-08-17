@@ -1,16 +1,24 @@
 doctype html
 head
   title= pageTitle
-  link(rel='stylesheet', href='../stylesheets/style.css')
-nav
-  ul
-    li
-      a(href='/') Home    
-    li
-      a(href='/books') Books
-    li
-      a(href='/patrons') Patrons
-    li
-      a(href='/loans') Loans
+  link(rel='stylesheet' href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous")
 
-block content
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
+  .container
+    h2.navbar-brand(href='#') Library Manager
+    ul.navbar-nav.mr-auto
+      li.nav-item
+        a.nav-link(href='/')
+          | Home 
+      li.nav-item
+        a.nav-link(href='/books') Books
+      li.nav-item
+        a.nav-link(href='/patrons') Patrons
+      li.nav-item
+        a.nav-link(href='/loans') Loans
+    form.form-inline.my-2.my-lg-0
+      input#search.form-control.mr-sm-2(type='search', name='search', placeholder='Search book ...', aria-label='Search')
+      button.btn.btn-outline-success.my-2.my-sm-0(type='button', onclick='searchBook()') Search
+  script(src='../javascripts/main.js')
+.container
+  block content

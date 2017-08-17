@@ -2,24 +2,24 @@ extends layout.pug
 
 block content
   body
-    h1 New Book 
+    h2 New Book 
     if errors
       h4.error Oooops! Errors returned!
       ul.error
         each error in errors
           li.error= error.message
     form(action='/books', method='post')
-      p
+      p.form-group
         label(for='title') Title
-        input#title(type='text', name='title', value= book.title)
-      p
+        input#title.form-control(type='text', name='title', value= book.title)
+      p.form-group
         label(for='author') Author
-        input#author(type='text' name='author', value= book.author)
-      p
+        input#author.form-control(type='text' name='author', value= book.author)
+      p.form-group
         label(for='genre') Genre
-        input#genre(type='text' name='genre', value= book.genre)
-      p
+        input#genre.form-control(type='text' name='genre', value= book.genre)
+      p.form-group
         label(for='first_published') First Published
-        input#first_published(type='text' name='first_published', value= book.first_published)
-      p
-        input(type='submit', value='Create New Book')
+        input#first_published.form-control(type='text' name='first_published', value= book.first_published)
+      p.form-group
+        input.btn.btn-primary(type='submit', value='Create New Book')

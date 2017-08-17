@@ -2,11 +2,12 @@ extends layout.pug
 
 block content
   body
-    h1 Patrons
+    h2 Patrons
     p
-      a.button(href='/patrons/new') Create New Patron
-    table
-      thead
+      a.btn.btn-success.btn-sm(href='/patrons/new') Create New Patron
+
+    table.table.table-striped.table-bordered.table-hover.table-sm
+      thead.thead-inverse
         tr
           th Name 
           th Address

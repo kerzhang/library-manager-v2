@@ -2,7 +2,7 @@ extends layout.pug
 
 block content
   body
-    h1 Book: #{book.title}
+    h2 Book: #{book.title}
     if errors
       h2.error Oooops!
       ul.error
@@ -10,23 +10,23 @@ block content
           li.error= error.message
     form(action='/books/' + book.id, method="post")
       p(name='id', value='book.id', style='display:none')
-      p
+      p.form-group
         label(for='title') Title
-        input#title(name='title', type='text', value=book.title)
-      p
+        input#title.form-control(name='title', type='text', value=book.title)
+      p.form-group
         label(for='author') Author
-        input#author(name='author', type='text', value=book.author)
-      p
+        input#author.form-control(name='author', type='text', value=book.author)
+      p.form-group
         label(for='genre') Genre
-        input#genre(name='genre', type='text', value=book.genre)
-      p
+        input#genre.form-control(name='genre', type='text', value=book.genre)
+      p.form-group
         label(for='first_published') First Published
-        input#first_published(name='first_published', type='text', value=book.first_published)
-      p
-        input(type='submit', value='Update')
+        input#first_published.form-control(name='first_published', type='text', value=book.first_published)
+      p.form-group
+        input.btn.btn-primary(type='submit', value='Update')
     h2 Loan History
-    table
-      thead
+    table.table.table-striped.table-bordered.table-hover.table-sm
+      thead.thead-inverse
         tr
           th Book
           th Patron 
@@ -45,4 +45,4 @@ block content
             td= loan.return_by
             td= loan.return_on
             td
-              a.button(href='/books/' + loan.book_id + '/return') Return Book
+              a.button(href='/loans/' + loan.id) Return Book

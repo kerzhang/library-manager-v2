@@ -2,18 +2,23 @@ extends layout.pug
 
 block content
   body
-    h1 Books
+    h2 Books
+    p.float-right
+      a.btn.btn-success.btn-sm(href='/books/new') Create New Book
+      //- form.form-inline.my-2.my-lg-0
+      //-   input.form-control.mr-sm-2(type='search', name='search', placeholder='Search book ...', aria-label='Search')
+      //-   button#search.btn.btn-outline-success.my-2.my-sm-0(type='button', onclick='searchBook()') Search
+
     p
-      a.button(href='/books/new') Create New Book
-    p
-      | Filters 
-      a(href='/books') All
+      | Filters: 
+      a.btn.btn-outline-success.btn-sm(href='/books') All
       |  
-      a(href='/books?filter=overdue') Overdue
+      a.btn.btn-outline-success.btn-sm(href='/books/overdue') Overdue
       |  
-      a(href='/books?filter=checked_out') Checked Out
-    table
-      thead
+      a.btn.btn-outline-success.btn-sm(href='/books/checked_out') Checked Out
+
+    table.table.table-striped.table-bordered.table-hover.table-sm
+      thead.thead-inverse
         tr
           th Title
           th Author
@@ -30,7 +35,7 @@ block content
     br
     .pagination
       each page in totalPages
-        a(class={active: page===currentPage} href='/books?page='+ page )= page
+        a.page-item.page-link(class={active: page===currentPage} href='/books?page='+ page )= page
 
 
-
+    script(src='../javascripts/main.js')

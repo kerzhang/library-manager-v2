@@ -2,18 +2,18 @@ extends layout.pug
 
 block content
   body
-    h1 Checked Out Books
-    p
-      a.button(href='/books/new') Create New Book
+    h2 Checked Out Books
+    p.float-right
+      a.btn.btn-success.btn-sm(href='/books/new') Create New Book
     p
       | Filters 
-      a(href='/books') All
+      a.btn.btn-outline-success.btn-sm(href='/books') All
       |  
-      a(href='/books?filter=overdue') Overdue
+      a.btn.btn-outline-success.btn-sm(href='/books/overdue') Overdue
       |  
-      a(href='/books?filter=checked_out') Checked Out
-    table
-      thead
+      a.btn.btn-outline-success.btn-sm(href='/books/checked_out') Checked Out
+    table.table.table-striped.table-bordered.table-hover.table-sm
+      thead.thead-inverse
         tr
           th Title
           th Author

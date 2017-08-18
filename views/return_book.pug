@@ -2,7 +2,7 @@ extends layout.pug
 
 block content
   body
-    h1 Return Book
+    h2.m-3 Return Book
     p
       strong Book Title: 
       | #{loan.Book.title}
@@ -16,8 +16,8 @@ block content
       strong Return By: 
       | #{loan.return_by}
     form(action="/loans/" + loan.id, method='post')
-      p
+      p.form-group
         label(for='returned_on') Returned on:
-        input#returned_on(type='text', name='returned_on' value= returnDay)
+        input#returned_on.form-control(type='text', name='returned_on' value= returnDay)
       p
-        input(type='submit', value='Return Book')
+        input.btn.btn-primary(type='submit', value='Return Book')

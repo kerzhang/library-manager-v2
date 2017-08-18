@@ -1,7 +1,7 @@
 'use strict';
 module.exports = function(sequelize, DataTypes) {
   var Patron = sequelize.define('Patron', {
-    id: { type: DataTypes.INTEGER, primaryKey: true},
+    // id: { type: DataTypes.INTEGER, primaryKey: true},
     first_name: {
       type: DataTypes.STRING,
       validate: {

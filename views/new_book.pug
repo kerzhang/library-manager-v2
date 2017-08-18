@@ -4,10 +4,10 @@ block content
   body
     h2 New Book 
     if errors
-      h4.error Oooops! Errors returned!
-      ul.error
+      h4.alert-danger Oooops! Errors returned!
+      ul.alert
         each error in errors
-          li.error= error.message
+          li.alert-danger= error.message
     form(action='/books', method='post')
       p.form-group
         label(for='title') Title

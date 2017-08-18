@@ -5,8 +5,8 @@ block content
     h2 New Book
     form
     if errors
-      h4.error.danger Oooops! Errors returned!
-      ul.error
+      h4.alert.alert-danger Oooops! Errors returned!
+      ul.alert
       each error in errors
         li.danger= error.message
     else

@@ -3,7 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   var Book = sequelize.define(
     'Book',
     {
-      id: { type: DataTypes.INTEGER, primaryKey: true },
+      // id: { type: DataTypes.INTEGER, primaryKey: true },
       title: {
         type: DataTypes.STRING,
         validate: {

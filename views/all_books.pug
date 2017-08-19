@@ -32,7 +32,7 @@ block content
             td= book.author
             td= book.genre
             td= book.first_published
-    br
+
     .pagination
       each page in totalPages
         a.page-item.page-link(class={active: page===currentPage} href='/books?page='+ page )= page

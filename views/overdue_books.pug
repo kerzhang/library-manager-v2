@@ -13,7 +13,7 @@ block content
       |  
       a.btn.btn-outline-success.btn-sm(href='/books/checked_out') Checked Out
     table.table.table-striped.table-bordered.table-hover.table-sm
-      thead.thead-inverse
+      thead.bg-info.text-white
         tr
           th Title
           th Author
@@ -23,7 +23,7 @@ block content
         each book in books
           tr
             td
-              a(href='/books/' + book.id)= book.title
+              a.small.text-success.align-middle(href='/books/' + book.id)= book.title
             td= book.author
             td= book.genre
             td= book.first_published

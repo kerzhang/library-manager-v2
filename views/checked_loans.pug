@@ -13,7 +13,7 @@ block content
       |  
       a.btn.btn-outline-success.btn-sm(href='/loans/checked_out') Checked Out
     table.table.table-striped.table-bordered.table-hover.table-sm
-      thead.thead-inverse
+      thead.bg-info.text-white
         tr
           th Book
           th Patron 
@@ -25,12 +25,12 @@ block content
         each loan in loans
           tr
             td
-              a(href='/books/' + loan.book_id)= loan.Book.title
+              a.small.text-success.align-middle(href='/books/' + loan.book_id)= loan.Book.title
             td
-              a(href='/patrons/' + loan.patron_id)= loan.Patron.first_name +' '+ loan.Patron.last_name
-            td= loan.loaned_on
-            td= loan.return_by
+              a.small.text-success.align-middle(href='/patrons/' + loan.patron_id)= loan.Patron.first_name +' '+ loan.Patron.last_name
+            td.small= loan.loaned_on
+            td.small= loan.return_by
+            td.small
             td
-            td
-              a.button(href='/loans/' + loan.id) Return Book
+              a.small.text-success.align-middle(href='/loans/' + loan.id) Return Book
 

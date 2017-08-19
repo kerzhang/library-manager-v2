@@ -2,7 +2,8 @@ extends layout.pug
 
 block content
   body
-    h2 Book: #{book.title}
+    h1.m-3 Book: 
+      span.strong #{book.title}
     if errors
       h2.alter Oooops!
       ul
@@ -23,10 +24,10 @@ block content
         label(for='first_published') First Published
         input#first_published.form-control(name='first_published', type='text', value=book.first_published)
       p.form-group
-        input.btn.btn-primary(type='submit', value='Update')
+        input.btn.btn-success(type='submit', value='Update')
     h2 Loan History
     table.table.table-striped.table-bordered.table-hover.table-sm
-      thead.thead-inverse
+      thead.bg-info.text-white
         tr
           th Book
           th Patron 
@@ -38,11 +39,11 @@ block content
         each loan in loans
           tr
             td
-              a(href='/books/' + book.id)= book.title
+              a.small.text-success.align-middle(href='/books/' + book.id)= book.title
             td
-              a(href='/patrons/' + loan.Patron.id)= loan.Patron.first_name +' '+ loan.Patron.last_name
-            td= loan.loaned_on
-            td= loan.return_by
-            td= loan.return_on
-            td
-              a.button(href='/loans/' + loan.id) Return Book
+              a.small.text-success.align-middle(href='/patrons/' + loan.Patron.id)= loan.Patron.first_name +' '+ loan.Patron.last_name
+            td.small= loan.loaned_on
+            td.small= loan.return_by
+            td.small= loan.returned_on
+            td.small
+              a.btn.text-success.align-middle(href='/loans/' + loan.id) Return Book

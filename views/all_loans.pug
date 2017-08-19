@@ -34,7 +34,6 @@ block content
             td
               a.btn.btn-small.text-success.btn-sm(href='/loans/' + loan.id) Return Book
 
-    br
     .pagination
       each page in totalPages
         a.page-item.page-link(class={active: page===currentPage} href='/loans?page='+ page )= page

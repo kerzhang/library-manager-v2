@@ -15,7 +15,7 @@ block content
         label(for='patron_id') Patron
         select#patron_id.form-control(name='patron_id')
           each patron, index in patrons
-            option(value= patron.id)= patron.first_name + ' ' + patron.lastName
+            option(value= patron.id)= patron.first_name + ' ' + patron.last_name
 
       p.form-group
         label(for='loaned_on') Loaned on:

@@ -179,26 +179,28 @@ router.get('/new', function(req, res, next) {
           loans.forEach(function(loan){
             booksNotReturned.push(loan.book_id)
           });
+          // console.log('== Books not returned: ' + booksNotReturned);
           books.forEach(function(book) {
             if (booksNotReturned.indexOf(book.id) < 0) {
-              availableBooks.push(book)
+              availableBooks.push(book);
             }
           }, this);
-        });
-      })
-      .then(function() {
-        var loanDate = new Date().toISOString();
-        var today = new Date();
-        var returnDate = new Date(
-          today.setDate(today.getDate() + 7)
-        ).toISOString();
-        res.render('new_loan', {
-          loan: db.Loan.build(),
-          books: availableBooks,
-          patrons: allPatrons,
-          loanDate: loanDate,
-          returnDate: returnDate,
-          pageTitle: 'New Loan'
+          console.log('== Books available: ' + availableBooks);          
+        })
+        .then(function() {
+          var loanDate = new Date().toISOString();
+          var today = new Date();
+          var returnDate = new Date(
+            today.setDate(today.getDate() + 7)
+          ).toISOString();
+          res.render('new_loan', {
+            loan: db.Loan.build(),
+            books: availableBooks,
+            patrons: allPatrons,
+            loanDate: loanDate,
+            returnDate: returnDate,
+            pageTitle: 'New Loan'
+          });
         });
       });
   });

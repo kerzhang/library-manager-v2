@@ -80,19 +80,13 @@ router.get('/', function(req, res) {
           where: {
             $or: [
               {
-                title: {
-                  $like: '%' + req.query.search + '%'
-                }
+                title: { $like: '%' + req.query.search + '%' }
               },
               {
-                author: {
-                  $like: '%' + req.query.search + '%'
-                }
+                author: { $like: '%' + req.query.search + '%' }
               },
               {
-                genre: {
-                  $like: '%' + req.query.search + '%'
-                }
+                genre: { $like: '%' + req.query.search + '%' }
               }
             ]
           }
@@ -113,7 +107,8 @@ router.get('/', function(req, res) {
       } else if (req.query.page !== undefined) {
         let clickedPage = 1;
         if (req.query.page <= paginations.length && req.query.page > 0) {
-          console.log('current page is: ' + req.query.page);
+
+          //Get the requested page number and then perform the query
           clickedPage = req.query.page;
         db.Book
           .findAll({
@@ -196,7 +191,8 @@ router.get('/new', function(req, res, next) {
 router.route('/:id')
 .get(function(req, res) {
   db.Book.findById(req.params.id).then(function(book) {
-    db.Loan
+    if (book) {
+      db.Loan
       .findAll({
         include: [
           {
@@ -223,6 +219,15 @@ router.route('/:id')
         console.log(error);
         res.sendStatus(500);
       });
+    } else {
+      var err = new Error('That book doesn\'t exist!');
+      err.status = 404;
+      res.render('error', {
+        errors: [err],
+        path: '/books/'
+      })
+    }
+
   });
 })
 .post(function(req, res, next) {

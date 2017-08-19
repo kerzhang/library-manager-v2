@@ -2,22 +2,22 @@ extends layout.pug
 
 block content
   body
-    h2.m-3 New Book 
+    h2.mt-3.mb-3 New Book 
     if errors
       h4.alert-danger Oooops! Errors returned!
       ul.alert
         each error in errors
           li.alert-danger= error.message
-    form(action='/books', method='post')
+    form.was-validated(action='/books', method='post')
       p.form-group
         label(for='title') Title
-        input#title.form-control(type='text', name='title', value= book.title)
+        input#title.form-control(type='text', name='title', value= book.title, required='')
       p.form-group
         label(for='author') Author
-        input#author.form-control(type='text' name='author', value= book.author)
+        input#author.form-control(type='text' name='author', value= book.author, required='')
       p.form-group
         label(for='genre') Genre
-        input#genre.form-control(type='text' name='genre', value= book.genre)
+        input#genre.form-control(type='text' name='genre', value= book.genre, required='')
       p.form-group
         label(for='first_published') First Published
         input#first_published.form-control(type='text' name='first_published', value= book.first_published)

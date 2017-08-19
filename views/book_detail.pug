@@ -2,7 +2,7 @@ extends layout.pug
 
 block content
   body
-    h1.m-3 Book: 
+    h1.mt-3.mb-3 Book: 
       span.strong #{book.title}
     if errors
       h2.alter Oooops!
@@ -42,8 +42,9 @@ block content
               a.small.text-success.align-middle(href='/books/' + book.id)= book.title
             td
               a.small.text-success.align-middle(href='/patrons/' + loan.Patron.id)= loan.Patron.first_name +' '+ loan.Patron.last_name
-            td.small= loan.loaned_on
-            td.small= loan.return_by
-            td.small= loan.returned_on
+            td.small= (loan.loaned_on ? loan.loaned_on.substring(0,10) : '')
+            td.small= (loan.return_by ? loan.return_by.substring(0,10) : '')
+            td.small= (loan.returned_on ? loan.returned_on.substring(0,10) : '')
             td.small
-              a.btn.text-success.align-middle(href='/loans/' + loan.id) Return Book
+              if !loan.returned_on 
+                a.btn.btn-small.text-success.btn-sm(href='/loans/' + loan.id) Return Book

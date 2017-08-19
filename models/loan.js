@@ -25,7 +25,10 @@ module.exports = function(sequelize, DataTypes) {
         validate: {
           notEmpty: {
             msg: 'Loan date is required.'
-          }
+          },
+          isDate: {
+            msg: 'Lonaed On must be a date.'
+          } 
         }
       },
       return_by: {
@@ -33,10 +36,20 @@ module.exports = function(sequelize, DataTypes) {
         validate: {
           notEmpty: {
             msg: 'Return date is required.'
-          }
+          },
+          isDate: {
+            msg: 'Return By must be a date.'
+          } 
         }
       },
-      returned_on: DataTypes.DATE
+      returned_on: {
+        type: DataTypes.DATE,
+        validate: {
+          isDate: {
+            msg: 'Returned On must be a date.'
+          } 
+        }
+      }
     },
     {
       classMethods: {

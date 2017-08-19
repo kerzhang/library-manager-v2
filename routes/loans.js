@@ -188,11 +188,11 @@ router.get('/new', function(req, res, next) {
           console.log('== Books available: ' + availableBooks);          
         })
         .then(function() {
-          var loanDate = new Date().toISOString();
+          var loanDate = new Date().toISOString().substring(0, 10);
           var today = new Date();
           var returnDate = new Date(
             today.setDate(today.getDate() + 7)
-          ).toISOString();
+          ).toISOString().substring(0, 10);
           res.render('new_loan', {
             loan: db.Loan.build(),
             books: availableBooks,
@@ -248,7 +248,16 @@ router.route('/:id')
       ]
     })
     .then(function(loan) {
+      if(loan) {
       res.render('return_book', { loan: loan, pageTitle: 'Return Book', returnDay: today });
+    } else {
+      var err = new Error('That item doesn\'t exist!');
+      err.status = 404;
+      res.render('error', {
+        errors: [err],
+        path: '/books/'
+      })
+    }
     })
     .catch(function(error) {
       console.log('there is error: ' + error);
@@ -263,9 +272,12 @@ router.route('/:id')
     if(loan) {
       return loan.update(req.body);
     } else {
-      //TODO: create new Error object
-      console.log("======" + req.params.id);
-      res.sendStatus(404);
+      var err = new Error('That item doesn\'t exist!');
+      err.status = 404;
+      res.render('error', {
+        errors: [err],
+        path: '/books/'
+      })
     }
   })
   .then(function() {

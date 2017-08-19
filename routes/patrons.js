@@ -25,7 +25,7 @@ router.get('/new', function(req, res, next) {
 
 //Save new book
 router.post('/', function(req, res, next) {
-  console.log(req.body);
+  // console.log(req.body);
   db.Patron.create(req.body).then(function() {
     res.redirect('/patrons');
   }).catch(function(err) {
@@ -63,80 +63,45 @@ router.post('/:id', function(req, res, next) {
       res.status(500).send(error);
     });
 });
-//Get patron detials.
-/* router.get('/:id', function(req, res) {
-  db.Patron.findById(req.params.id, {
-    include: [
-      {
-        model : db.Loan,
-      }
-    ]
-  }).then(function (patron) {
-    var patronObj = Object.assign(
-        {},
-        {
-          patronFirstName : patron.first_name,
-          patronLastName: patron.last_name,
-          patronAddress : patron.address,
-          patronEmail : patron.email,
-          patronLibraryId : patron.library_id,
-          patronZip : patron.zip_code,
-          patronLoans : patron.Loans.map(function (loan) {
-            //FIXME: Find a way to fetch the patron name.
-            return Object.assign(
-              {},
-              {
-                loanId : loan.id,
-                loanBook : loan.book_id,
-                loanedOn : loan.loaned_on,
-                loanReturnBy : loan.return_by,
-                loanReturnOn : loan.returned_on,
-                loanPatronId : loan.patron_id,
-                // loanPatron : patronName
-              }
-            );
-          })
-        }
-      )
-      res.render('patron_detail', { patron: patronObj, pageTitle: 'Patron Detail' });
-      console.log(patronObj);
-  }).catch(function(error) {
-    console.log(error);
-    res.status(500).send(error);
-  });
-  
-}); */
+
 router.get('/:id', function(req, res) {
   db.Patron.findById(req.params.id).then(function(patron) {
-    db.Loan.findAll({
-      include: [
-        {
-          model: db.Book
-        },
-        // {
-        //   model: db.Patron
-        // }
-      ],
-      where: {
-        patron_id: patron.id
-      }
-    })
-      .then(function(loans) {
-        if (loans) {
-          // console.log(loans);
-          res.render('patron_detail', {
-            patron: patron,
-            loans: loans,
-            pageTitle: 'Patron Detail'
-          });
-        } else {
-          res.sendStatus(404);
+    if (patron) {
+      db.Loan.findAll({
+        include: [
+          {
+            model: db.Book
+          }
+        ],
+        where: {
+          patron_id: patron.id
         }
       })
-      .catch(function(error) {
-        console.log(error);
-        res.sendStatus(500);
-      });
+        .then(function(loans) {
+          if (loans) {
+            // console.log(loans);
+            res.render('patron_detail', {
+              patron: patron,
+              loans: loans,
+              pageTitle: 'Patron Detail'
+            });
+          } else {
+            res.sendStatus(404);
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+          res.sendStatus(500);
+        });
+    } else {
+      var err = new Error('The patron doesn\'t exist!');
+      err.status = 404;
+      res.render('error', {
+        errors: [err],
+        path: '/books/'
+      })
+    }
+
   });
 });
 

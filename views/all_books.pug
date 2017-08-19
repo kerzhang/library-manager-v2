@@ -2,7 +2,7 @@ extends layout.pug
 
 block content
   body
-    h1.m-3.strong Books
+    h1.mt-3.mb-3 Books
     p.float-right
       a.btn.btn-success.btn-sm(href='/books/new') Create New Book
       //- form.form-inline.my-2.my-lg-0
@@ -17,25 +17,28 @@ block content
       |  
       a.btn.btn-outline-success.btn-sm(href='/books/checked_out') Checked Out
 
-    table.table.table-striped.table-bordered.table-hover.table-sm
-      thead.bg-info.text-white
-        tr
-          th Title
-          th Author
-          th Genre
-          th Year Released
-      tbody
-        each book in books
+    if (books.length <= 0)
+      h2.m-5.alert-warning No book found!
+    else
+      table.table.table-striped.table-bordered.table-hover.table-sm
+        thead.bg-info.text-white
           tr
-            td
-              a.text-success(href='/books/' + book.id)= book.title
-            td= book.author
-            td= book.genre
-            td= book.first_published
+            th Title
+            th Author
+            th Genre
+            th Year Released
+        tbody
+          each book in books
+            tr
+              td
+                a.text-success(href='/books/' + book.id)= book.title
+              td= book.author
+              td= book.genre
+              td= book.first_published
 
-    .pagination
-      each page in totalPages
-        a.page-item.page-link(class={active: page===currentPage} href='/books?page='+ page )= page
+      .pagination
+        each page in totalPages
+          a.page-item.page-link(class={active: page===currentPage} href='/books?page='+ page)= page
 
 
     script(src='../javascripts/main.js')

@@ -2,7 +2,7 @@ extends layout.pug
 
 block content
   body
-    h1.m-3 Patron: 
+    h1.mt-3.mb-3 Patron: 
       span.strong
         | #{patron.first_name + ' ' + patron.last_name}
     form(action="/patrons/" + patron.id, method='post')
@@ -44,8 +44,9 @@ block content
               a.small.text-success.align-middle(href='/books/' + loan.book_id)= loan.Book.title
             td
               a.small.text-success.align-middle(href='/patrons/' + patron_id)= patron.first_name + ' ' + patron.last_name
-            td.small.align-middle= loan.loaned_on
-            td.small.align-middle= loan.return_by
-            td.small.align-middle= loan.return_on
+            td.small.align-middle= (loan.loaned_on ? loan.loaned_on.substring(0,10) : '')
+            td.small.align-middle= (loan.return_by ? loan.return_by.substring(0,10) : '')
+            td.small.align-middle= (loan.returned_on ? loan.returned_on.substring(0,10) : '')
             td
-              a.btn.btn-sm.text-success(href='/loans/' + loan.id) Return Book
+              if !loan.returned_on 
+                a.btn.btn-small.text-success.btn-sm(href='/loans/' + loan.id) Return Book

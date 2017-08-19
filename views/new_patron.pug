@@ -2,30 +2,30 @@ extends layout.pug
 
 block content
   body
-    h2.m-3 New Patron
+    h2.mt-3.mb-3 New Patron
     if errors
       h4.alert-danger Oooops! Errors returned!
       ul.alert
         each error in errors
           li.alert-danger= error.message
-    form(action='/patrons', method='post')
+    form.was-validated(action='/patrons', method='post')
       p.form-group
         label(for='first_name') First Name
-        input#first_name.form-control(type='text', name='first_name', value= patron.first_name)
+        input#first_name.form-control(type='text', name='first_name', value= patron.first_name, required='')
       p.form-group
         label(for='last_name') Last Name
-        input#last_name.form-control(type='text', name='last_name')
+        input#last_name.form-control(type='text', name='last_name', required='')
       p.form-group
         label(for='address')  Address
-        input#address.form-control(type='text', name='address')
+        input#address.form-control(type='text', name='address', required='')
       p.form-group
         label(for='email') Email
-        input#email.form-control(type='text', name='email')
+        input#email.form-control(type='text', name='email', required='')
       p.form-group
         label(for='library_id') Library ID
-        input#library_id.form-control(type='text', name='library_id')
+        input#library_id.form-control(type='text', name='library_id', required='')
       p.form-group
         label(for='zip_code') Zip Code
-        input#zip_code.form-control(type='text', name='zip_code')
+        input#zip_code.form-control(type='text', name='zip_code', required='')
       p.form-group
-        input.btn.btn-primary(type='submit', value='Create New Patron')
+        input.btn.btn-success(type='submit', value='Create New Patron')

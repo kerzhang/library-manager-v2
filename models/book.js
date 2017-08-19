@@ -30,11 +30,11 @@ module.exports = function(sequelize, DataTypes) {
       },
       first_published: {
         type: DataTypes.INTEGER,
-        validate: {
-          isInt: {
-            msg: 'Please input an integer number for the published year.'
-          }
-        }
+        // validate: {
+        //   isInt: {
+        //     msg: 'Please input an integer number for the published year.'
+        //   }
+        // }
       }
     },
     {

@@ -1,12 +1,12 @@
 {
-  "development": {
+  "test": {
     "database": "library",
     "host": "localhost",
     "username": "mysql",
     "password": "12345678",
     "dialect": "mysql"
   },
-  "test": {
+  "development": {
     "storage": "library.db",
     "dialect": "sqlite"
   },

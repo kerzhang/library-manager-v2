@@ -2,12 +2,12 @@ extends layout.pug
 
 block content
   body
-    h2.m-3 New Loan
+    h2.mt-3.mb-3 New Loan
 
-    form(action='/loans/', method='post')
+    form.was-validated(action='/loans/', method='post')
       p.form-group
-        label(for='book_id') Book
-        select#book_id(name='book_id')
+        label.mr-1(for='book_id') Book: 
+        select#book_id.form-control(name='book_id')
           each book, index in books
             option(value= book.id)= book.title
 
@@ -19,9 +19,9 @@ block content
 
       p.form-group
         label(for='loaned_on') Loaned on:
-        input#loaned_on.form-control(type='text', name='loaned_on', value= loanDate)
+        input#loaned_on.form-control(type='text', name='loaned_on', value= loanDate, required='')
       p.form-group
-        label(for='return_by') Return by:
-        input#return_by.form-control(type='text', name='return_by', value= returnDate)
+        label(for='return_by', required='') Return by:
+        input#return_by.form-control(type='text', name='return_by', value= returnDate, required='')
       p.form-group
-        input.btn.btn-primary(type='submit', value='Create New Loan')
+        input.btn.btn-success.btn-sm(type='submit', value='Create New Loan')

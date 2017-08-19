@@ -31,6 +31,9 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         notEmpty: {
           msg: 'eMail is required.'
+        },
+        isEmail: {
+          msg: 'Please input a valid email address.'
         }
       }
     },
@@ -47,7 +50,10 @@ module.exports = function(sequelize, DataTypes) {
       validate: {
         notEmpty: {
           msg: 'Zip code is required.'
-        }
+        },
+        isInt: {
+          msg: 'Zip code must be an integer number'
+        } 
       }
     }
   }, {

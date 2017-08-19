@@ -2,12 +2,12 @@ extends layout.pug
 
 block content
   body
-    h2 Patrons
+    h1.m-3.strong Patrons
     p
       a.btn.btn-success.btn-sm(href='/patrons/new') Create New Patron
 
     table.table.table-striped.table-bordered.table-hover.table-sm
-      thead.thead-inverse
+      thead.bg-info.text-white
         tr
           th Name 
           th Address
@@ -18,7 +18,7 @@ block content
         each patron in patrons
           tr
             td
-              a(href='/patrons/' + patron.id)= patron.first_name + ' ' + patron.last_name
+              a.text-success(href='/patrons/' + patron.id)= patron.first_name + ' ' + patron.last_name
             td= patron.address
             td= patron.email
             td= patron.library_id

@@ -209,7 +209,7 @@ router.route('/:id')
       })
       .then(function(loans) {
         if (loans) {
-          console.log(loans);
+          // console.log(loans);
           res.render('book_detail', {
             book: book,
             loans: loans,

@@ -85,7 +85,7 @@ router.get('/', function(req, res) {
     })
     .then(function() {
       if (req.query.page !== undefined) {
-        let clickedPage = 1;
+        var clickedPage = 1;
         if (req.query.page <= paginations.length && req.query.page > 0) {
           console.log('current page is: ' + req.query.page);
           clickedPage = req.query.page;
@@ -156,16 +156,35 @@ router.get('/', function(req, res) {
 
 //Add new loan
 router.get('/new', function(req, res, next) {
-  let allBooks = [];
-  let allPatrons = [];
-  db.Book.findAll().then(function(books) {
-    allBooks = books;
-    db.Patron
+  var allBooks = [];
+  var allPatrons = [];
+  var booksNotReturned = [];
+  var availableBooks =[];
+
+  db.Patron.findAll().then(function(patrons) {
+    allPatrons = patrons;
+    
+    //Find all available books, all loaned books should be filtered
+    db.Book
       .findAll({
-        //TODO: Books that already loaned should be filtered
       })
-      .then(function(patrons) {
-        allPatrons = patrons;
+      .then(function(books) {
+        allBooks = books;
+        db.Loan.findAll({
+          attribute: ['book_id'],
+          where: {
+            returned_on: null
+          }
+        }).then(function(loans){
+          loans.forEach(function(loan){
+            booksNotReturned.push(loan.book_id)
+          });
+          books.forEach(function(book) {
+            if (booksNotReturned.indexOf(book.id) < 0) {
+              availableBooks.push(book)
+            }
+          }, this);
+        });
       })
       .then(function() {
         var loanDate = new Date().toISOString();
@@ -174,8 +193,8 @@ router.get('/new', function(req, res, next) {
           today.setDate(today.getDate() + 7)
         ).toISOString();
         res.render('new_loan', {
-          patron: db.Loan.build(),
-          books: allBooks,
+          loan: db.Loan.build(),
+          books: availableBooks,
           patrons: allPatrons,
           loanDate: loanDate,
           returnDate: returnDate,

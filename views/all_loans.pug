@@ -2,7 +2,7 @@ extends layout.pug
 
 block content
   body
-    h2 Loans
+    h1.m-3.strong Loans
     p.float-right
       a.btn.btn-success.btn-sm(href='/loans/new') Create New Loan
     p
@@ -13,7 +13,7 @@ block content
       |  
       a.btn.btn-outline-success.btn-sm(href='/loans/checked_out') Checked Out
     table.table.table-striped.table-bordered.table-hover.table-sm
-      thead.thead-inverse
+      thead.bg-info.text-white
         tr
           th Book
           th Patron 
@@ -25,14 +25,14 @@ block content
         each loan in loans
           tr
             td
-              a(href='/books/' + loan.book_id)= loan.Book.title
+              a.small.text-success.align-middle(href='/books/' + loan.book_id)= loan.Book.title
             td
-              a(href='/patrons/' + loan.patron_id)= loan.Patron.first_name + ' ' + loan.Patron.last_name
-            td= loan.loaned_on
-            td= loan.return_by
-            td= loan.returned_on
+              a.small.text-success.align-middle(href='/patrons/' + loan.patron_id)= loan.Patron.first_name + ' ' + loan.Patron.last_name
+            td.small.align-middle= loan.loaned_on
+            td.small.align-middle= loan.return_by
+            td.small.align-middle= loan.returned_on
             td
-              a.button(href='/loans/' + loan.id) Return Book
+              a.btn.btn-small.text-success.btn-sm(href='/loans/' + loan.id) Return Book
 
     br
     .pagination

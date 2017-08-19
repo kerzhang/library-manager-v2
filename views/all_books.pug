@@ -2,7 +2,7 @@ extends layout.pug
 
 block content
   body
-    h2 Books
+    h1.m-3.strong Books
     p.float-right
       a.btn.btn-success.btn-sm(href='/books/new') Create New Book
       //- form.form-inline.my-2.my-lg-0
@@ -18,7 +18,7 @@ block content
       a.btn.btn-outline-success.btn-sm(href='/books/checked_out') Checked Out
 
     table.table.table-striped.table-bordered.table-hover.table-sm
-      thead.thead-inverse
+      thead.bg-info.text-white
         tr
           th Title
           th Author
@@ -28,7 +28,7 @@ block content
         each book in books
           tr
             td
-              a(href='/books/' + book.id)= book.title
+              a.text-success(href='/books/' + book.id)= book.title
             td= book.author
             td= book.genre
             td= book.first_published

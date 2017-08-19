@@ -4,10 +4,10 @@ block content
   body
     h2 Book: #{book.title}
     if errors
-      h2.error Oooops!
-      ul.error
+      h2.alter Oooops!
+      ul
         each error in errors
-          li.error= error.message
+          li.alter.alter-danger= error.message
     form(action='/books/' + book.id, method="post")
       p(name='id', value='book.id', style='display:none')
       p.form-group
